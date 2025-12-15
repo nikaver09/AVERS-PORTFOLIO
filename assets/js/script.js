@@ -80,35 +80,63 @@ navLinks.forEach(link => {
 });
 
 /* ===============================
-   PORTFOLIO FILTER
+   PORTFOLIO FILTER (FIXED)
 ================================ */
-const filterBtns = document.querySelectorAll("[data-filter-btn]");
-const select = document.querySelector("[data-select]");
-const selectItems = document.querySelectorAll("[data-select-item]");
-const selectValue = document.querySelector("[data-selecct-value]");
-const filterItems = document.querySelectorAll("[data-filter-item]");
+
+const filterBtns   = document.querySelectorAll("[data-filter-btn]");
+const select       = document.querySelector("[data-select]");
+const selectItems  = document.querySelectorAll("[data-select-item]");
+const selectValue  = document.querySelector("[data-select-value]");
+const filterItems  = document.querySelectorAll("[data-filter-item]");
 
 // Toggle dropdown
-select.addEventListener("click", function () {
-  elementToggleFunc(this);
+select.addEventListener("click", () => {
+  select.classList.toggle("active");
 });
 
-// Core filter function
-function filterFunc(selectedValue) {
-  selectedValue = selectedValue.toLowerCase();
+// Core filter logic
+function filterProjects(value) {
+  const selected = value.toLowerCase();
 
   filterItems.forEach(item => {
     const category = item.dataset.category.toLowerCase();
 
-    if (selectedValue === "all") {
-      item.classList.add("active");
-    } else if (selectedValue === category) {
+    if (selected === "all" || selected === category) {
       item.classList.add("active");
     } else {
       item.classList.remove("active");
     }
   });
 }
+
+// Dropdown select
+selectItems.forEach(item => {
+  item.addEventListener("click", () => {
+    const value = item.innerText.trim();
+
+    selectValue.innerText = value;
+    select.classList.remove("active");
+
+    filterProjects(value);
+  });
+});
+
+// Desktop buttons
+let lastBtn = filterBtns[0];
+
+filterBtns.forEach(btn => {
+  btn.addEventListener("click", () => {
+    const value = btn.innerText.trim();
+
+    selectValue.innerText = value;
+    filterProjects(value);
+
+    lastBtn.classList.remove("active");
+    btn.classList.add("active");
+    lastBtn = btn;
+  });
+});
+
 
 // Dropdown filter
 selectItems.forEach(item => {
